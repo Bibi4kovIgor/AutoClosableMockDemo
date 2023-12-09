@@ -3,14 +3,11 @@ package edu.lemon.autoclosable;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static edu.lemon.autoclosable.ResourceState.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class MyResourceTest {
-    private static final String RESOURCE_IS_OPEN_TO_USE = "Resource is open to use";
-    private static final String RESOURCE_IS_BEING_USED = "Resource is being used";
-    private static final String RESOURCE_CLOSED = "Resource closed";
-
     private static MyResource resource;
     private static Logger loggerMocked;
 
@@ -22,26 +19,28 @@ class MyResourceTest {
 
     @Test
     void open_setResourceStateToOpened_changesResourceState() {
-         resource.open();
+        String expected = RESOURCE_IS_OPEN_TO_USE.getResourceState();
+        resource.open();
+        String actual = resource.getStatusMessage();
 
-         assertEquals(RESOURCE_IS_OPEN_TO_USE, resource.getStatusMessage());
-         verify(loggerMocked, atLeastOnce()).log(RESOURCE_IS_OPEN_TO_USE);
+         assertEquals(expected, actual);
+         verify(loggerMocked, atLeastOnce()).log(RESOURCE_IS_OPEN_TO_USE.getResourceState());
     }
 
     @Test
     void doSomething_changeResourceStateToDoSomeAction_changesResourceState() {
         resource.doSomething();
 
-        assertEquals(RESOURCE_IS_BEING_USED, resource.getStatusMessage());
-        verify(loggerMocked, atLeastOnce()).log(RESOURCE_IS_BEING_USED);
+        assertEquals(RESOURCE_IS_BEING_USED.getResourceState(), resource.getStatusMessage());
+        verify(loggerMocked, atLeastOnce()).log(RESOURCE_IS_BEING_USED.getResourceState());
     }
 
     @Test
     void close_setResourceStateToClosed_changesResourceState() {
         resource.close();
 
-        assertEquals(RESOURCE_CLOSED, resource.getStatusMessage());
-        verify(loggerMocked, atLeastOnce()).log(RESOURCE_CLOSED);
+        assertEquals(RESOURCE_CLOSED.getResourceState(), resource.getStatusMessage());
+        verify(loggerMocked, atLeastOnce()).log(RESOURCE_CLOSED.getResourceState());
     }
 
 }

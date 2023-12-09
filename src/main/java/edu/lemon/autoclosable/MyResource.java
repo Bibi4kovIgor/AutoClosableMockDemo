@@ -1,10 +1,8 @@
 package edu.lemon.autoclosable;
 
-public class MyResource implements AutoCloseable {
+import static edu.lemon.autoclosable.ResourceState.*;
 
-    private static final String RESOURCE_IS_OPEN_TO_USE = "Resource is open to use";
-    private static final String RESOURCE_IS_BEING_USED = "Resource is being used";
-    private static final String RESOURCE_CLOSED = "Resource closed";
+public class MyResource implements AutoCloseable {
 
     private final Logger logger;
     private String statusMessage;
@@ -15,13 +13,13 @@ public class MyResource implements AutoCloseable {
     }
 
     public void open(){
-        statusMessage = RESOURCE_IS_OPEN_TO_USE;
+        statusMessage = RESOURCE_IS_OPEN_TO_USE.getResourceState();
         logger.log(statusMessage);
     }
 
     // Method to simulate resource usage
     public void doSomething() {
-        statusMessage = RESOURCE_IS_BEING_USED;
+        statusMessage = RESOURCE_IS_BEING_USED.getResourceState();
         logger.log(statusMessage);
 
     }
@@ -29,7 +27,7 @@ public class MyResource implements AutoCloseable {
     // Close the resource
     @Override
     public void close() {
-        statusMessage = RESOURCE_CLOSED;
+        statusMessage = RESOURCE_CLOSED.getResourceState();
         logger.log(statusMessage);
     }
 
