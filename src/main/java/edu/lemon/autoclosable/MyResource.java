@@ -21,7 +21,6 @@ public class MyResource implements AutoCloseable {
     public void doSomething() {
         statusMessage = RESOURCE_IS_BEING_USED.getResourceState();
         logger.log(statusMessage);
-
     }
 
     // Close the resource

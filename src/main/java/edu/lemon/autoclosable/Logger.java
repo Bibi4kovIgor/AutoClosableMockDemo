@@ -7,7 +7,9 @@ public interface Logger {
     static Logger createLogger() {
         return message -> {};
     }
+//    Override Overload Overwrite
     static Logger createPrintableLogger() {
         return System.out::println;
     }
+
 }
