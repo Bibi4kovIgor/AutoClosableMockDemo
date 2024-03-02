@@ -1,49 +1,50 @@
 package edu.lemon.database.mysql;
 
 import edu.lemon.database.DatabaseManager;
-import edu.lemon.database.data.ConnectionData;
+import edu.lemon.database.connection.Connection;
 import edu.lemon.database.exception.ConnectionException;
-
-import static edu.lemon.database.mysql.MySqlStateMessage.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MySqlDbManager implements DatabaseManager {
 
-    private static final String CONNECTION_ESTABLISHED_EXCEPTION = "Connection to MySQL was already established";
-    private static final String CONNECTION_NOT_ESTABLISHED_EXCEPTION = "Connection to MySQL was not established";
-    private ConnectionData connectionData;
-    private String stateMessage;
+  private final static Logger logger = LoggerFactory.getLogger(MySqlDbManager.class);
 
-    public MySqlDbManager(String stateMessage) {
-        this.connectionData = new ConnectionData(false, stateMessage);
-        this.stateMessage = DEFAULT_MESSAGE.getValue();
-    }
+  private static final String CONNECTION_ESTABLISHED = "Connection to MySQL was established";
+  private static final String CONNECTION_CLOSED = "Connection to MySQL was closed";
+  private final Connection connection;
 
-    @Override
-    public void connect() {
-        if (connectionData.connectionState()) {
-            throw new ConnectionException(CONNECTION_ESTABLISHED_EXCEPTION);
-        }
-        connectionData = connectionData.switchConnectionState(true);
-        stateMessage = CONNECTION_ESTABLISHED_MESSAGE.getValue();
-        stateMessage += connectionData.connectionString();
-    }
+  public MySqlDbManager(String stateMessage) {
+    this.connection = new Connection(stateMessage);
+  }
 
-    @Override
-    public void disconnect() {
-        if (!connectionData.connectionState()) {
-            throw new ConnectionException(CONNECTION_NOT_ESTABLISHED_EXCEPTION);
-        }
-        connectionData = connectionData.switchConnectionState(false);
-        stateMessage = CONNECTION_CLOSED_MESSAGE.getValue();
+  @Override
+  public void connect() {
+    try {
+      connection.connect();
+    } catch (ConnectionException e) {
+      logger.error(e.getMessage());
     }
+    logger.info(CONNECTION_ESTABLISHED);
+  }
 
-    @Override
-    public boolean checkConnectionState() {
-        return connectionData.connectionState();
+  @Override
+  public void disconnect() {
+    try {
+      connection.disconnect();
+    } catch (ConnectionException e) {
+      logger.error(e.getMessage());
     }
+    logger.info(CONNECTION_CLOSED);
+  }
 
-    @Override
-    public String getStateMessage() {
-        return stateMessage;
-    }
+  @Override
+  public boolean checkConnectionState() {
+    return connection.connectionState();
+  }
+
+  @Override
+  public String getConnectionStateMessage() {
+    return connection.connectionStateMessage();
+  }
 }

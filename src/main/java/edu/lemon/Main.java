@@ -17,8 +17,13 @@ public class Main {
             System.out.println(data);
         } catch (IOException e) {
             System.err.println(e.getMessage());
-        } /*finally {       // It is not necessary block. It was placed only to demonstrate profit of using
-                            // "Parametrized critical section within AutoClosable interface"
+            /**
+             * It is not necessary block. It was placed only to demonstrate profit of using
+             * "Parametrized critical section within AutoClosable interface"
+             * @deprecated
+             * */
+        } /*finally {
+
             try {
                 if(Objects.nonNull(fileInputStream)) {
                     fileInputStream.close();
@@ -27,5 +32,6 @@ public class Main {
                 System.err.println(e.getMessage());
             }
         }*/
+
     }
 }
